@@ -1,8 +1,6 @@
 # ApiAuth::Client
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/api_auth/client`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Use this gem to create simple API Client classes.
 
 ## Installation
 
@@ -22,7 +20,59 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+class VolabitClient < ApiAuth::Client::Base
+  connect url: 'https://www.volabit.com/api/v1'
+
+  def tickers
+    connection.get('/tickers')
+  end
+
+  # bang method, it will raise an error if it fails
+  def tickers!
+    connection.get!('/tickers')
+  end
+
+  # reqires auth
+  def me
+    connection.get('/users/me')
+  end
+end
+```
+
+### Access to the response
+
+```ruby
+client = VolabitClient.new
+response = client.tickers
+#<ApiAuth::Client::Response btc_mxn_buy="123255.81", btc_mxn_sell="127187.57", ltc_mxn_buy="999.96", ltc_mxn_sell="1033.07", bch_mxn_buy="10522.97", bch_mxn_sell="10873.06", xrp_mxn_buy="9.58", xrp_mxn_sell="9.9">
+response[:btc_mxn_buy] == response['btc_mxn_buy'] == btc_mxn_buy.btc_mxn_buy
+
+response[:unknown] == response['unknown'] == nil
+response.unknown # raises NoMethodError
+```
+
+### Bang methods, RoR style
+
+You can use bang `!` methods if you want the method to raise an error if the requests fails due to server error, bad requests or a bad connection.
+
+```ruby
+client = VolabitClient.new
+begin
+  response = client.tickers!
+rescue ApiAuth::Client::ConnectionError =>
+  e # => #<ApiAuth::Client::ConnectionError: Connection Error>
+  e.response
+  # { message: 'Failed to open TCP connection' }
+  e.code # nil
+rescue ApiAuth::Client::ApiEndpointError => e
+  e # => #<ApiAuth::Client::ApiEndpointError: 500 Internal Server Error>
+  e.response
+  # <ApiAuth::Client::Response error="Bad JSON", body="500 Internal Server Error...">
+  e.response.body
+  e.code # 400
+end
+```
 
 ## Development
 
