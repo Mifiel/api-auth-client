@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'api_auth/client/base'
-require 'api_auth/client/connection'
-require 'api_auth/client/error_with_json'
-require 'api_auth/client/response'
-require 'api_auth/client/version'
+require_relative 'client/base'
+require_relative 'client/connection'
+require_relative 'client/error_with_json'
+require_relative 'client/response'
+require_relative 'client/version'
 
 module ApiAuth
   module Client
