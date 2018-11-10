@@ -2,9 +2,9 @@
 
 RSpec.describe ApiAuth::Client::Base do
   class MyClient < ApiAuth::Client::Base
-    url 'https://example.com'
-    app_id 'some-app-id'
-    secret_key 'some-secret-key'
+    connect url: 'https://example.com',
+            app_id: 'some-app-id',
+            secret_key: 'some-secret-key'
 
     def some_method
       connection.post('/some/action')
