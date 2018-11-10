@@ -1,5 +1,10 @@
 # ApiAuth::Client
 
+[![Gem Version][gem-version-image]][gem-version-url]
+[![Build Status][travis-image]][travis-url]
+[![Coverage Status][coveralls-image]][coveralls-url]
+[![security][security-image]][security-url]
+
 Use this gem to create simple API Client classes.
 
 ## Installation
@@ -83,3 +88,15 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/api_auth-client.
+
+[gem-version-image]: https://badge.fury.io/rb/api_auth-client.svg
+[gem-version-url]: https://badge.fury.io/rb/api_auth-client
+
+[security-url]: https://hakiri.io/github/Mifiel/api-auth-client/master
+[security-image]: https://hakiri.io/github/Mifiel/api-auth-client/master.svg
+
+[travis-image]: https://travis-ci.org/Mifiel/api-auth-client.svg?branch=master
+[travis-url]: https://travis-ci.org/Mifiel/api-auth-client
+
+[coveralls-image]: https://coveralls.io/repos/github/Mifiel/api-auth-client/badge.svg?branch=master
+[coveralls-url]: https://coveralls.io/github/Mifiel/api-auth-client?branch=master
