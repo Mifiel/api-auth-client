@@ -8,39 +8,42 @@ module ApiAuth
     class Connection
       attr_reader :url, :app_id, :secret_key
 
-      def initialize(url, app_id: nil, secret_key: nil)
+      def initialize(url:, app_id: nil, secret_key: nil)
         @url = url
         @app_id = app_id
         @secret_key = secret_key
       end
 
-      def get(path, payload = {})
-        query :get, path, payload
-      end
+      %i[
+        get
+        post
+        put
+        delete
+      ].each do |mtd|
+        define_method("#{mtd}!") do |path, payload = {}|
+          query(mtd, path, payload)
+        end
 
-      def post(path, payload = {})
-        query :post, path, payload
-      end
-
-      def put(path, payload = {})
-        query :put, path, payload
-      end
-
-      def delete(path, payload = {})
-        query :delete, path, payload
+        define_method(mtd) do |path, payload = {}|
+          begin
+            send("#{mtd}!", path, payload)
+          rescue ConnectionError, ApiEndpointError => e
+            e.response
+          end
+        end
       end
 
       def query(mtd, path, payload = {}) # rubocop:disable Metrics/AbcSize
         req = build_request(mtd, path, payload)
-        response = execute(req)
-        Response.new(response)
+        Response.new(execute(req))
       rescue RestClient::RequestTimeout, RestClient::Exceptions::OpenTimeout
-        raise ConnectionError.new('Error', { errors: ['Connection timeout'] }, 400)
-      rescue Errno::ECONNREFUSED => e
-        raise ConnectionError.new('Connection Error', { message: e.message }, 400)
+        raise ConnectionError.new('Error', { errors: ['Connection timeout'] }, nil)
+      rescue Errno::ECONNREFUSED, SocketError => e
+        raise ConnectionError.new('Connection Error', { message: e.message }, nil)
       rescue RestClient::ExceptionWithResponse => e
         response = Response.new(e.response)
-        raise ApiEndpointError.new(response[:errors] || e.message, response, response.code)
+        msg = response[:errors] || e.message
+        raise ApiEndpointError.new(msg, response, response.code)
       end
 
     private

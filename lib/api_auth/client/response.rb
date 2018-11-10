@@ -1,22 +1,36 @@
 # frozen_string_literal: true
 
+require 'json'
+
 module ApiAuth
   module Client
     class Response
       attr_reader :response, :parsed, :attrs
 
-      # @param response [RestClient::Response]
+      # @param response [Hash | RestClient::Response]
       def initialize(response)
-        @response = response
+        fail ArgumentError, 'response is not a RestClient::Response' unless response.is_a?(RestClient::Response)
+
+        @response ||= response
         parse
       end
 
       def [](arg)
-        parsed.send(arg)
+        parsed.send(arg) if parsed.respond_to?(arg)
       end
 
       def to_json
-        JSON.parse(response.body)
+        JSON.parse(response)
+      rescue JSON::ParserError
+        { 'error' => 'Bad JSON', 'body' => response.body }
+      end
+
+      def ok?
+        response.code >= 200 && response.code < 400
+      end
+
+      def inspect
+        parsed.inspect.gsub('OpenStruct', 'ApiAuth::Client::Response')
       end
 
       def method_missing(meth, *args, &blk)
@@ -33,9 +47,9 @@ module ApiAuth
     private
 
       def parse
-        @parsed = JSON.parse(response, object_class: OpenStruct)
+        @parsed ||= JSON.parse(response, object_class: OpenStruct)
       rescue JSON::ParserError
-        @parsed = nil
+        @parsed = OpenStruct.new(error: 'Bad JSON', body: response.body)
       end
     end
   end
