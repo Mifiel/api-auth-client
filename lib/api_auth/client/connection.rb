@@ -49,16 +49,21 @@ module ApiAuth
     private
 
       def build_request(mtd, path, payload)
-        RestClient::Request.new(
+        params = {
           method: mtd,
           url: endpoint_uri(path),
-          payload: payload.to_json,
           ssl_version: 'SSLv23',
-          headers: {
-            content_type: :json,
-            accept: :json,
-          },
-        )
+          headers: json_headers,
+        }
+        params[:payload] = payload.to_json if mtd == :post
+        RestClient::Request.new(params)
+      end
+
+      def json_headers
+        {
+          content_type: :json,
+          accept: :json,
+        }
       end
 
       def execute(req)
