@@ -1,3 +1,5 @@
+inherit_from: .rubocop_todo.yml
+
 require: rubocop-rspec
 
 AllCops:
@@ -13,6 +15,11 @@ Metrics/BlockLength:
   Exclude:
     - Guardfile
     - 'spec/**/*'
+
+Naming/FileName:
+  Exclude:
+    - 'lib/api-auth-client.rb'
+    - 'lib/api_auth-client.rb'
 
 Style/TrailingCommaInArguments:
   EnforcedStyleForMultiline: consistent_comma
