@@ -27,7 +27,9 @@ Or install it yourself as:
 
 ```ruby
 class VolabitClient < ApiAuth::Client::Base
-  connect url: 'https://www.volabit.com/api/v1'
+  connect url: 'https://www.volabit.com/api/v1',
+          app_id: 'some-app-id',
+          secret_key: 'some-app-secret'
 
   def tickers
     connection.get('/tickers')
