@@ -1,9 +1,14 @@
 # frozen_string_literal: true
 
-require 'api_auth/client/version'
+require_relative 'client/base'
+require_relative 'client/connection'
+require_relative 'client/error_with_json'
+require_relative 'client/response'
+require_relative 'client/version'
 
 module ApiAuth
   module Client
-    # Your code goes here...
+    class ConnectionError < ErrorWithJson; end
+    class ApiEndpointError < ErrorWithJson; end
   end
 end

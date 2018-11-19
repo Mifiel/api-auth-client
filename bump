@@ -19,7 +19,7 @@ __INITIAL__ = ['0', '0', '1']
 if __name__ == "__main__":
     v = []
     try:
-        version_file = glob.glob("lib/*/version.rb")[0]
+        version_file = glob.glob("lib/api_auth/client/version.rb")[0]
         raw_v = re.search(r'VERSION = \'(.*)\'', open(version_file).read(), re.M|re.I|re.S).group(1)
         v = re.split(re.compile("\.|-"), raw_v)
         v = v[0:3]
