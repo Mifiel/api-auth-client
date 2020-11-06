@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ApiAuth::Client::Base do
-  class MyClient < ApiAuth::Client::Base
+  class MyClient < ApiAuth::Client::Base # rubocop:disable RSpec/LeakyConstantDeclaration
     connect url: 'https://example.com',
             app_id: 'some-app-id',
             secret_key: 'some-secret-key'

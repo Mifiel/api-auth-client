@@ -19,7 +19,7 @@ module ApiAuth
         parsed.send(arg) if parsed.respond_to?(arg)
       end
 
-      def to_json
+      def to_json(*_args)
         JSON.parse(response)
       rescue JSON::ParserError
         { 'error' => 'Bad JSON', 'body' => response.body }

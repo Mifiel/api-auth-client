@@ -36,7 +36,7 @@ RSpec.describe ApiAuth::Client::Connection do
         describe 'when non-banged method' do
           let(:executed) { conn.send(action, path) }
 
-          it "should #{action.upcase} and not raise error" do
+          it "#{action.upcase}s and not raise error" do
             expect { executed }.not_to raise_error
             expect(WebMock).to have_requested(action, full_url).once
           end
@@ -45,7 +45,7 @@ RSpec.describe ApiAuth::Client::Connection do
         describe 'when using banged method' do
           let(:executed) { conn.send("#{action}!", path) }
 
-          it "should #{action.upcase} and raise error" do
+          it "#{action.upcase}s and raise error" do
             expect { executed }.to raise_error(ApiAuth::Client::ApiEndpointError)
             expect(WebMock).to have_requested(action, full_url).once
           end
@@ -59,7 +59,7 @@ RSpec.describe ApiAuth::Client::Connection do
           stub_request(action, full_url).to_timeout
         end
 
-        it "should #{action.upcase} and raise error" do
+        it "#{action.upcase}s and raise error" do
           expect { executed }.to raise_error(ApiAuth::Client::ConnectionError)
           expect(WebMock).to have_requested(action, full_url).once
         end
@@ -100,7 +100,7 @@ RSpec.describe ApiAuth::Client::Connection do
                                       .with(headers: { 'Authorization' => /APIAuth someappid:.+/ })
       end
 
-      it "should #{action.upcase} with the right headers" do
+      it "#{action.upcase}s with the right headers" do
         executed
         expect(WebMock).to have_requested(action, full_url).once
       end
