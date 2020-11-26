@@ -6,14 +6,15 @@ require 'api-auth'
 module ApiAuth
   module Client
     class Connection
-      attr_reader :url, :app_id, :secret_key, :type, :auth_token
+      attr_reader :url, :app_id, :secret_key, :type, :auth_token, :args
 
-      def initialize(url:, app_id: nil, secret_key: nil, type: nil, auth_token: nil)
+      def initialize(url:, app_id: nil, secret_key: nil, type: nil, auth_token: nil, args: {}) # rubocop:disable Metrics/ParameterLists
         @url = url
         @app_id = app_id
         @secret_key = secret_key
         @type = type
         @auth_token = auth_token
+        @args = args
       end
 
       %i[
@@ -56,7 +57,8 @@ module ApiAuth
           url: endpoint_uri(path),
           ssl_version: 'SSLv23',
           headers: json_headers,
-        }
+        }.merge(args)
+
         params[:payload] = payload.to_json if payload.present?
         params.merge!(user: app_id, password: secret_key) if type == :basic
         RestClient::Request.new(params)
@@ -68,6 +70,7 @@ module ApiAuth
           accept: :json,
         }
         headers.merge!(authorization: "Bearer #{auth_token}") if type == :token
+        headers.merge!(args.delete(:headers)) if args.key?(:headers)
         headers
       end
 
