@@ -57,7 +57,7 @@ module ApiAuth
           url: endpoint_uri(path),
           ssl_version: 'SSLv23',
           headers: json_headers,
-        }.merge(args)
+        }.merge(args&.except(:headers)&.to_h)
 
         params[:payload] = payload.to_json if payload.present?
         params.merge!(user: app_id, password: secret_key) if type == :basic
@@ -70,7 +70,7 @@ module ApiAuth
           accept: :json,
         }
         headers.merge!(authorization: "Bearer #{auth_token}") if type == :token
-        headers.merge!(args.delete(:headers)) if args.key?(:headers)
+        headers.merge!(args[:headers]) if args.key?(:headers)
         headers
       end
 
