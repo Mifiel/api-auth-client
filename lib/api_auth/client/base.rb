@@ -12,7 +12,7 @@ module ApiAuth
       module ClassMethods
         attr_reader :attr_url, :attr_app_id, :attr_secret_key, :attr_type, :attr_auth_token, :attr_args
 
-        def connect(url:, app_id: nil, secret_key: nil, type: :hmac, auth_token: nil, attr_args: {}) # rubocop:disable Metrics/ParameterLists
+        def connect(url:, app_id: nil, secret_key: nil, type: :hmac, auth_token: nil, args: {}) # rubocop:disable Metrics/ParameterLists
           @attr_url = url
           @attr_app_id = app_id
           @attr_secret_key = secret_key
